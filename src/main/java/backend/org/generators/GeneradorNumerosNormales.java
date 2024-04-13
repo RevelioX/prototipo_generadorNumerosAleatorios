@@ -1,10 +1,11 @@
-package backend.org;
+package backend.org.generators;
 
-import java.io.IOError;
+import backend.org.errors.NoMoreRandomNumbers;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class GeneradorNumerosNormales {
+public class GeneradorNumerosNormales extends Generador {
     private double media;
     private double desviacion;
 
@@ -34,21 +35,6 @@ public class GeneradorNumerosNormales {
             valores.add(nroNormal1);
             valores.add(nroNormal2);
         }
-    }
-
-    public double getValor(){
-        if(valores.isEmpty()){
-            throw new IllegalArgumentException();
-        }
-        Double valor = valores.remove(0);
-        return valor;
-    }
-
-    public boolean hasNumbers(){
-        if(valores.isEmpty()){
-            return false;
-        }
-        return true;
     }
 
 }

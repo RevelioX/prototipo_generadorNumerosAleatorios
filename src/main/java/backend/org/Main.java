@@ -1,18 +1,23 @@
 package backend.org;
 
+import backend.org.generators.Generador;
+import backend.org.generators.GeneradorNumerosUniformes;
+
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
-        double media = 6;
-        double desviacion = 2;
+        double media = 30;
+        double desviacion = 15;
 
-        GeneradorNumerosNormales gen = new GeneradorNumerosNormales(media, desviacion);
-        gen.generarValor(4);
-        double acumulador = 0;
-        while(gen.hasNumbers()){
-            double valor = gen.getValor();
-            System.out.println(valor);
-            acumulador = (acumulador + valor);
+        Generador gen = new GeneradorNumerosUniformes(0, 10);
+        gen.generarValor(1000000);
+        List<Double> valores = gen.getAll();
+        double sumatoria = 0;
+        for (double v: valores){
+            sumatoria = sumatoria + v;
         }
-        System.out.println("Media:" + (acumulador/100));
+        System.out.println(valores);
+        System.out.println(sumatoria/1000000);
         }
     }
