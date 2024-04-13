@@ -15,11 +15,47 @@ public class Histograma {
       distributionMap = new TreeMap<>();
       this.classWidth = classWidth;
       Map distributionMap = processRawData(dataSet);
-      List yData = new ArrayList();
-      yData.addAll(distributionMap.values());
-      List xData = Arrays.asList(distributionMap.keySet().toArray());
+
+      List<Map.Entry<String, Long>> arr = new ArrayList<>(distributionMap.entrySet());
+      int n = arr.size();
+      for (int i = 0; i < n - 1; i++) {
+        boolean swapped = false;
+        for (int j = 0; j < n - i - 1; j++) {
+          String key = arr.get(j).getKey();
+          String[] parts = key.split("-");
+          String secondPart = parts[1];
+          int segundoElementoInt = Integer.parseInt(secondPart);
+
+          String key2 = arr.get(j + 1).getKey();
+          String[] parts2 = key2.split("-");
+          String secodPart2 = parts2[1];
+          int segundoElementoInt2 = Integer.parseInt(secodPart2);
+
+          if (segundoElementoInt > segundoElementoInt2) {
+            Map.Entry<String, Long> temp = arr.get(j);
+            arr.set(j, arr.get(j + 1));
+            arr.set(j + 1, temp);
+            swapped = true;
+          }
+        }
+        if (!swapped)
+          break;
+      }
+
+      System.out.println(arr);
+      List<String> xData = new ArrayList<>();
+      List<Long> yData = new ArrayList<>();
+      for (Map.Entry<String, Long> entry : arr) {
+        String key = entry.getKey();
+        Long yValue = entry.getValue();
+        xData.add(key);
+        yData.add(Long.parseLong(String.valueOf(yValue)));
+      }
+
       CategoryChart chart = buildChart(xData, yData);
       new SwingWrapper<>(chart).displayChart();
+
+
 
     }
 
@@ -58,7 +94,6 @@ public class Histograma {
                         : 0;
 
                 String bin = lowerBoundary + "-" + upperBoundary;
-
                 updateDistributionMap(lowerBoundary, bin, observationFrequency);
 
               });
