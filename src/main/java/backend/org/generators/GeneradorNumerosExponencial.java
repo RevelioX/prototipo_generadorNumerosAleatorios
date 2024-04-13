@@ -7,9 +7,10 @@ import java.util.List;
 
 public class GeneradorNumerosExponencial extends Generador {
     private double lambda;
-    private List<Double> valores;
-    public GeneradorNumerosExponencial(double lambda){
 
+    public GeneradorNumerosExponencial(double lambda){
+        super();
+        this.lambda = lambda;
     }
 
 

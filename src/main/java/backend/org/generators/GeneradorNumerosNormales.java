@@ -9,12 +9,12 @@ public class GeneradorNumerosNormales extends Generador {
     private double media;
     private double desviacion;
 
-    private List<Double> valores;
+
 
     public GeneradorNumerosNormales(double media, double desviacion){
+        super();
         this.media = media;
         this.desviacion = desviacion;
-        this.valores = new ArrayList<>();
     }
 
     public void generarValor(int cantidad){

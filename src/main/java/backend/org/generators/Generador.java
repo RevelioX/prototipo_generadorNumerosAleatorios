@@ -7,8 +7,12 @@ import java.util.List;
 
 public abstract class Generador {
 
-    private List<Double> valores;
+    protected List<Double> valores;
 
+    public Generador()
+    {
+        this.valores = new ArrayList<Double>();
+    }
     public void generarValor(int cantidad){
 
     }
