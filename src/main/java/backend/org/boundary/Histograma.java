@@ -9,11 +9,11 @@ import java.util.*;
 
 public class Histograma {
     private final Map<String, Long> distributionMap;
-    private final int classWidth;
+    private final double classWidth;
 
-    public Histograma(int classWidth, List<Double> dataSet) {
+    public Histograma( List<Double> dataSet) {
       distributionMap = new TreeMap<>();
-      this.classWidth = classWidth;
+      this.classWidth = widthClassCalc(dataSet);
       Map distributionMap = processRawData(dataSet);
 
       List<Map.Entry<String, Long>> arr = new ArrayList<>(distributionMap.entrySet());
@@ -24,12 +24,12 @@ public class Histograma {
           String key = arr.get(j).getKey();
           String[] parts = key.split("-");
           String secondPart = parts[1];
-          int segundoElementoInt = Integer.parseInt(secondPart);
+          double segundoElementoInt = Double.parseDouble(secondPart);
 
           String key2 = arr.get(j + 1).getKey();
           String[] parts2 = key2.split("-");
-          String secodPart2 = parts2[1];
-          int segundoElementoInt2 = Integer.parseInt(secodPart2);
+          String secodPart2 = parts2[0];
+          double segundoElementoInt2 = Double.parseDouble(secodPart2);
 
           if (segundoElementoInt > segundoElementoInt2) {
             Map.Entry<String, Long> temp = arr.get(j);
@@ -59,7 +59,20 @@ public class Histograma {
 
     }
 
-    private CategoryChart buildChart(List<String> xData, List<Long> yData) {
+  private double widthClassCalc(List<Double> valores){
+      Optional<Double> max = valores.stream().max(Double::compareTo);
+      Optional<Double> min = valores.stream().min(Double::compareTo);
+      if (max.isPresent()){
+        double rango = max.get() - min.get();
+        int cantidad = (int) Math.round(Math.sqrt(valores.size()));
+        System.out.println(cantidad);
+        System.out.println(rango);
+        return (rango/cantidad);
+      }
+      return 0;
+  }
+
+  private CategoryChart buildChart(List<String> xData, List<Long> yData) {
 
       CategoryChart chart = new CategoryChartBuilder().width(800).height(600)
               .title("Distribucion")
@@ -77,36 +90,33 @@ public class Histograma {
       return chart;
     }
 
-    private Map processRawData(List<Double> datasetList) {
+  public Map<String, Long> processRawData(List<Double> datasetList) {
+    Frequency frequency = new Frequency();
+    datasetList.forEach(frequency::addValue);
 
-      Frequency frequency = new Frequency();
-      datasetList.forEach(d -> frequency.addValue(Double.parseDouble(d.toString())));
-      datasetList.stream()
-              .map(d -> Double.parseDouble(d.toString()))
-              .distinct()
-              .forEach(observation -> {
-                long observationFrequency = frequency.getCount(observation);
-                int upperBoundary = (observation > classWidth)
-                        ? Math.multiplyExact( (int) Math.ceil(observation / classWidth), classWidth)
-                        : classWidth;
-                int lowerBoundary = (upperBoundary > classWidth)
-                        ? Math.subtractExact(upperBoundary, classWidth)
-                        : 0;
+    datasetList.stream()
+            .distinct()
+            .forEach(observation -> {
+              long observationFrequency = frequency.getCount(observation);
+              double upperBoundary = (observation > classWidth)
+                      ? Math.ceil(observation / classWidth) * classWidth
+                      : classWidth;
+              double lowerBoundary = (upperBoundary > classWidth)
+                      ? upperBoundary - classWidth
+                      : 0;
+              String bin = lowerBoundary + "-" + upperBoundary;
+              updateDistributionMap(lowerBoundary, bin, observationFrequency);
+            });
+    return distributionMap;
+  }
 
-                String bin = lowerBoundary + "-" + upperBoundary;
-                updateDistributionMap(lowerBoundary, bin, observationFrequency);
-
-              });
-      return distributionMap;
-    }
-
-  private void updateDistributionMap(int lowerBoundary, String bin, long observationFrequency) {
-    int prevLowerBoundary = (lowerBoundary > classWidth) ? lowerBoundary - classWidth : 0;
-    String prevBin = prevLowerBoundary + "-" + lowerBoundary;
-
-    if (!distributionMap.containsKey(prevBin)) {
-      distributionMap.put(prevBin, 0L);
-    }
+  private void updateDistributionMap(double lowerBoundary, String bin, long observationFrequency) {
+//    int prevLowerBoundary = (lowerBoundary > classWidth) ? lowerBoundary - classWidth : 0;
+//    String prevBin = prevLowerBoundary + "-" + lowerBoundary;
+//
+//    if (!distributionMap.containsKey(prevBin)) {
+//      distributionMap.put(prevBin, 0L);
+//    }
 
     if (!distributionMap.containsKey(bin)) {
       distributionMap.put(bin, observationFrequency);
