@@ -14,20 +14,20 @@ public class Main {
         double media = 30;
         double desviacion = 4;
 
-        Generador gen = new GeneradorNumerosExponencial(0.5);
-        gen.generarValor(10000);
+        Generador gen = new GeneradorNumerosNormales(media, desviacion);
+        gen.generarValor(1000000);
         List<Double> valores = gen.getAll();
         double sumatoria = 0;
         for (double v: valores){
             sumatoria = sumatoria + v;
         }
 //        System.out.println(valores);
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("Ingrese tamaño de intervalo: ");
-//        int amplitud = Integer.parseInt(scanner.nextLine());
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Ingrese tamaño de intervalo: ");
+        int intervalos = Integer.parseInt(scanner.nextLine());
 
 
-        new Histograma( valores);
+        new Histograma( valores, intervalos);
         System.out.println(sumatoria/100000);
         }
     }
