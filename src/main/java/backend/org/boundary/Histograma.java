@@ -54,7 +54,7 @@ public class Histograma {
       System.out.println(arr);
 
       PruebaChiCuadrado pruebaChiCuadrado = new PruebaChiCuadrado();
-      pruebaChiCuadrado.calculoKs(arr);
+      pruebaChiCuadrado.calculoChi(arr);
       PruebaKs pruebaKs = new PruebaKs();
       pruebaKs.calculoKs(arr);
 
