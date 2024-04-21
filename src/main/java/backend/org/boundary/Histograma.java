@@ -1,5 +1,7 @@
 package backend.org.boundary;
 
+import backend.org.PruebasBondad.PruebaChiCuadrado;
+import backend.org.PruebasBondad.PruebaKs;
 import org.apache.commons.math3.stat.Frequency;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
@@ -50,6 +52,12 @@ public class Histograma {
       }
 
       System.out.println(arr);
+
+      PruebaChiCuadrado pruebaChiCuadrado = new PruebaChiCuadrado();
+      pruebaChiCuadrado.calculoKs(arr);
+      PruebaKs pruebaKs = new PruebaKs();
+      pruebaKs.calculoKs(arr);
+
       List<String> xData = new ArrayList<>();
       List<Long> yData = new ArrayList<>();
       for (Map.Entry<String, Long> entry : arr) {
