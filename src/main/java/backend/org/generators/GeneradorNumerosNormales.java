@@ -34,6 +34,7 @@ public class GeneradorNumerosNormales extends Generador {
 
             valores.add(nroNormal1);
             valores.add(nroNormal2);
+
         }
     }
 

@@ -6,28 +6,138 @@ import backend.org.generators.GeneradorNumerosExponencial;
 import backend.org.generators.GeneradorNumerosNormales;
 import backend.org.generators.GeneradorNumerosUniformes;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
-import java.util.Scanner;
+import org.knowm.xchart.*;;
 
-public class Main {
-    public static void main(String[] args) {
-        double media = 30;
-        double desviacion = 4;
+public class Main extends JFrame {
+    private JTextField intervalField;
+    private JButton generateButton;
+    private JTextArea resultArea;
+    private JPanel chartPanel;
+    private JComboBox<String> generatorSelector;
+    private JTextField param1Field;
+    private JTextField param2Field;
+    private JLabel param1Label;
+    private JLabel param2Label;
 
-        Generador gen = new GeneradorNumerosNormales(media, desviacion);
-        gen.generarValor(1000000);
-        List<Double> valores = gen.getAll();
-        double sumatoria = 0;
-        for (double v: valores){
-            sumatoria = sumatoria + v;
-        }
-//        System.out.println(valores);
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Ingrese tamaño de intervalo: ");
-        int intervalos = Integer.parseInt(scanner.nextLine());
+    public Main() {
+        super("Generador de Histograma");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1000, 700);
+        setLayout(new BorderLayout());
 
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(5, 2, 10, 10));
+        inputPanel.add(new JLabel("Ingrese tamaño de intervalo:"));
+        intervalField = new JTextField(5);
+        inputPanel.add(intervalField);
 
-        new Histograma( valores, intervalos);
-        System.out.println(sumatoria/100000);
+        inputPanel.add(new JLabel("Seleccione la Distribución:"));
+        String[] generators = {"Normal", "Uniforme", "Exponencial"};
+        generatorSelector = new JComboBox<>(generators);
+        generatorSelector.addActionListener(e -> updateParametersUI());
+        inputPanel.add(generatorSelector);
+
+        param1Label = new JLabel("Media:");
+        param2Label = new JLabel("Desviación:");
+        param1Field = new JTextField("0", 10);
+        param2Field = new JTextField("0", 10);
+        inputPanel.add(param1Label);
+        inputPanel.add(param1Field);
+        inputPanel.add(param2Label);
+        inputPanel.add(param2Field);
+
+        
+
+        generateButton = new JButton("Generar");
+        
+        inputPanel.add(generateButton);
+        add(inputPanel, BorderLayout.NORTH);
+
+        resultArea = new JTextArea();
+        resultArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(resultArea);
+        add(scrollPane, BorderLayout.SOUTH);
+
+        chartPanel = new JPanel();
+        chartPanel.setLayout(new BorderLayout());
+        add(chartPanel, BorderLayout.CENTER);
+
+        generateButton.addActionListener(e -> generateHistogram());
+    }
+
+    private void updateParametersUI() {
+        String selectedGenerator = (String) generatorSelector.getSelectedItem();
+        if ("Normal".equals(selectedGenerator)) {
+            param1Label.setText("Media:");
+            param2Label.setText("Desviación:");
+            param1Field.setText("0");
+            param2Field.setText("0");
+            param2Field.setVisible(true);
+            param2Label.setVisible(true);
+        } else if ("Uniforme".equals(selectedGenerator)) {
+            param1Label.setText("Mínimo:");
+            param2Label.setText("Máximo:");
+            param1Field.setText("0");
+            param2Field.setText("0");
+            param2Field.setVisible(true);
+            param2Label.setVisible(true);
+        } else {
+            param2Field.setVisible(false);
+            param2Label.setVisible(false);
+            param1Label.setText("Lambda:");
         }
     }
+    
+
+    private void generateHistogram() {
+        try {
+            int intervalos = Integer.parseInt(intervalField.getText());
+            Histograma histograma = new Histograma(simulateData(), intervalos);
+            CategoryChart chart = histograma.buildChart();
+
+            // limpia el panel anterior
+            chartPanel.removeAll();
+            chartPanel.add(new XChartPanel<>(chart));
+            chartPanel.validate();
+
+            double sumatoria = simulateData().stream().mapToDouble(Double::doubleValue).sum();
+            resultArea.setText("Sumatoria: " + (sumatoria / 100000) + "\n");
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese un número válido.");
+        }
+    }
+
+    private List<Double> simulateData() {
+
+        String selectedGenerator = (String) generatorSelector.getSelectedItem();
+        double param1 = Double.parseDouble(param1Field.getText());
+        double param2 = param2Field.isVisible() ? Double.parseDouble(param2Field.getText()) : 1.0;
+
+        if ("Normal".equals(selectedGenerator)) {
+            // Crear una instancia del generador
+        GeneradorNumerosNormales generador = new GeneradorNumerosNormales(param1, param2);
+         // Generar valores. Aquí se especifica cuántos números quieres generar.
+         generador.generarValor(1000000);  // Por ejemplo, generar 1,000,000 de números normales.
+         // Ahora se puede recuperar y retornar los datos generados
+         return generador.getAll();
+        } else if ("Uniforme".equals(selectedGenerator)) {
+            GeneradorNumerosUniformes generador = new GeneradorNumerosUniformes(param1, param2);
+            generador.generarValor(1000000);
+            return generador.getAll();
+        } else {
+            GeneradorNumerosExponencial generador = new GeneradorNumerosExponencial(param1);
+            generador.generarValor(1000000);
+            return generador.getAll();
+        }
+        
+       
+    }   
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new Main().setVisible(true));
+    }
+}
