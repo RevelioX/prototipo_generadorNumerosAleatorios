@@ -11,10 +11,10 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        double media = 30;
+        double media = 45;
         double desviacion = 4;
 
-        Generador gen = new GeneradorNumerosNormales(media, desviacion);
+        Generador gen = new GeneradorNumerosExponencial(0.5);
         gen.generarValor(1000000);
         List<Double> valores = gen.getAll();
         double sumatoria = 0;

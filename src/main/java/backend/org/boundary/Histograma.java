@@ -4,12 +4,17 @@ import org.apache.commons.math3.stat.Frequency;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
 import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.style.Styler;
+
+import java.awt.*;
 import java.util.*;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class Histograma {
     private final Map<String, Long> distributionMap;
-//    private final double classWidth;
     private final int numIntervalos;
 
     public Histograma( List<Double> dataSet, int numIntervalos) {
@@ -55,28 +60,13 @@ public class Histograma {
       }
 
       CategoryChart chart = buildChart(xData, yData);
-      new SwingWrapper<>(chart).displayChart();
-
-
-
+      JTable table = buildTable(xData, yData);
+      displayChartAndTable(chart, table);
     }
-
-//  private double widthClassCalc(List<Double> valores){
-//      Optional<Double> max = valores.stream().max(Double::compareTo);
-//      Optional<Double> min = valores.stream().min(Double::compareTo);
-//      if (max.isPresent()){
-//        double rango = max.get() - min.get();
-//        int cantidad = (int) Math.round(Math.sqrt(valores.size()));
-//        System.out.println(cantidad);
-//        System.out.println(rango);
-//        return (rango/cantidad);
-//      }
-//      return 0;
-//  }
 
   private CategoryChart buildChart(List<String> xData, List<Long> yData) {
 
-      CategoryChart chart = new CategoryChartBuilder().width(800).height(600)
+      CategoryChart chart = new CategoryChartBuilder().width(1000).height(600)
               .title("Distribucion")
               .xAxisTitle("Intervalos")
               .yAxisTitle("Frecuencia")
@@ -85,12 +75,37 @@ public class Histograma {
       chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
       chart.getStyler().setAvailableSpaceFill(0.99);
       chart.getStyler().setOverlapped(true);
+      chart.getStyler().setXAxisLabelRotation(45);
 
 
       chart.addSeries("frecuencia", xData, yData);
 
       return chart;
     }
+  private JTable buildTable(List<String> xData, List<Long> yData) {
+    String[] columnNames = {"Intervalo", "Frecuencia"};
+    DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+    for (int i = 0; i < xData.size(); i++) {
+      model.addRow(new Object[]{xData.get(i), yData.get(i)});
+    }
+    return new JTable(model);
+  }
+
+  private void displayChartAndTable(CategoryChart chart, JTable table) {
+    JPanel chartPanel = new XChartPanel<>(chart);
+    JScrollPane tableScrollPane = new JScrollPane(table);
+    tableScrollPane.setPreferredSize(new Dimension(400, 600));
+
+    JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, chartPanel, tableScrollPane);
+    splitPane.setDividerLocation(900);
+
+    JFrame frame = new JFrame("Distribución y Frecuencia");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.getContentPane().add(splitPane);
+    frame.pack();
+    frame.setLocationRelativeTo(null);
+    frame.setVisible(true);
+  }
 
   private void processRawData(List<Double> datasetList) {
     Frequency frequency = new Frequency();
@@ -119,22 +134,4 @@ public class Histograma {
       }
     }
   }
-
-//  private void updateDistributionMap(double lowerBoundary, String bin, long observationFrequency) {
-////    int prevLowerBoundary = (lowerBoundary > classWidth) ? lowerBoundary - classWidth : 0;
-////    String prevBin = prevLowerBoundary + "-" + lowerBoundary;
-////
-////    if (!distributionMap.containsKey(prevBin)) {
-////      distributionMap.put(prevBin, 0L);
-////    }
-//
-//    if (!distributionMap.containsKey(bin)) {
-//      distributionMap.put(bin, observationFrequency);
-//    } else {
-//      long oldFrequency = distributionMap.get(bin);
-//      distributionMap.put(bin, oldFrequency + observationFrequency);
-//    }
-//  }
-
-
 }
