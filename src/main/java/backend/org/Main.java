@@ -14,8 +14,8 @@ public class Main {
         double media = 45;
         double desviacion = 4;
 
-        Generador gen = new GeneradorNumerosExponencial(0.5);
-        gen.generarValor(1000000);
+        Generador gen = new GeneradorNumerosNormales(15, 2);
+        gen.generarValor(1000);
         List<Double> valores = gen.getAll();
         double sumatoria = 0;
         for (double v: valores){
@@ -27,7 +27,7 @@ public class Main {
         int intervalos = Integer.parseInt(scanner.nextLine());
 
 
-        new Histograma( valores, intervalos);
+        new Histograma( valores, intervalos, 15L, 3L);
         System.out.println(sumatoria/100000);
         }
     }

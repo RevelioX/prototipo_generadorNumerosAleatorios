@@ -19,7 +19,7 @@ public class Histograma {
     private final Map<String, Long> distributionMap;
     private final int numIntervalos;
 
-    public Histograma( List<Double> dataSet, int numIntervalos) {
+    public Histograma( List<Double> dataSet, int numIntervalos, Long media, Long desviacion) {
       distributionMap = new TreeMap<>();
 //      this.classWidth = widthClassCalc(dataSet);
       this.numIntervalos = numIntervalos;
@@ -64,9 +64,9 @@ public class Histograma {
         yData.add(Long.parseLong(String.valueOf(yValue)));
       }
       PruebaChiCuadrado pruebaChiCuadrado = new PruebaChiCuadrado();
-      pruebaChiCuadrado.calculoChi(xData, yData);
-      PruebaKs pruebaKs = new PruebaKs();
-      pruebaKs.calculoKs(xData, yData);
+      pruebaChiCuadrado.calculoChi(xData, yData, "normal", desviacion, media);
+
+
 
       CategoryChart chart = buildChart(xData, yData);
       JTable table = buildTable(xData, yData);
