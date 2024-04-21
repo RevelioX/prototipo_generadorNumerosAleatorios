@@ -53,10 +53,7 @@ public class Histograma {
 
       System.out.println(arr);
 
-      PruebaChiCuadrado pruebaChiCuadrado = new PruebaChiCuadrado();
-      pruebaChiCuadrado.calculoChi(arr);
-      PruebaKs pruebaKs = new PruebaKs();
-      pruebaKs.calculoKs(arr);
+
 
       List<String> xData = new ArrayList<>();
       List<Long> yData = new ArrayList<>();
@@ -66,11 +63,17 @@ public class Histograma {
         xData.add(key);
         yData.add(Long.parseLong(String.valueOf(yValue)));
       }
+      PruebaChiCuadrado pruebaChiCuadrado = new PruebaChiCuadrado();
+      pruebaChiCuadrado.calculoChi(xData, yData);
+      PruebaKs pruebaKs = new PruebaKs();
+      pruebaKs.calculoKs(xData, yData);
 
       CategoryChart chart = buildChart(xData, yData);
       JTable table = buildTable(xData, yData);
       displayChartAndTable(chart, table);
     }
+
+
 
   private CategoryChart buildChart(List<String> xData, List<Long> yData) {
 

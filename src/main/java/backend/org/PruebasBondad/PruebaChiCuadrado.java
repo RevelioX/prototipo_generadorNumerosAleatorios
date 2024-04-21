@@ -5,9 +5,12 @@ import java.util.Map;
 
 public class PruebaChiCuadrado {
   private List<Map.Entry<String, Long>> array;
+  private String distribucion;
 
-  public Double calculoChi(List<Map.Entry<String, Long>> array){
-    return 0.0;
+  public Double calculoChi(String intervalos, Double frecuencias){
+    if (distribucion == "normal") {
+
+    }
   }
 
 
