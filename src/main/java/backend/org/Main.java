@@ -15,7 +15,7 @@ public class Main {
         double desviacion = 4;
 
         Generador gen = new GeneradorNumerosNormales(15, 2);
-        gen.generarValor(1000);
+        gen.generarValor(1000000);
         List<Double> valores = gen.getAll();
         double sumatoria = 0;
         for (double v: valores){
