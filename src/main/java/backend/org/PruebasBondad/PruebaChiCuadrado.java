@@ -20,7 +20,7 @@ public class PruebaChiCuadrado {
     List<String> intervalosCombinados = new ArrayList<>();
     List<Long> frecuenciasObservadasCombinadas = new ArrayList<>();
 
-    if ("normal".equals(distribucion)) {
+    if (distribucion.equals("normal")) {
       for (int i = 0; i < intervalos.size(); i++) {
         String[] partes = intervalos.get(i).split("-");
         Double limInf = Double.parseDouble(partes[0]);
@@ -37,6 +37,36 @@ public class PruebaChiCuadrado {
       }
 
       // Asegurar que todas las frecuencias esperadas superen un mínimo establecido antes de imprimir los resultados
+      asegurarFrecuenciasMinimas(frecuenciasEsperadasTemporales, intervalosCombinados, frecuenciasObservadasCombinadas, 5);
+    } else if (distribucion.equals("exponencial")) {
+      for (int i = 0; i < intervalos.size(); i++) {
+        String[] partes = intervalos.get(i).split("-");
+        Double limInf = Double.parseDouble(partes[0]);
+        Double limSup = Double.parseDouble(partes[1]);
+
+        Double lambda = (double) (1 / media);
+
+        Double probabilidad = (1 - Math.exp(-lambda * limSup)) - (1 - Math.exp(-lambda * limInf));
+
+        Double frecuenciaEsperada = probabilidad * n;
+
+        frecuenciasEsperadasTemporales.add(frecuenciaEsperada);
+        intervalosCombinados.add(intervalos.get(i));
+        frecuenciasObservadasCombinadas.add(frecuencias.get(i));
+      }
+
+      asegurarFrecuenciasMinimas(frecuenciasEsperadasTemporales, intervalosCombinados, frecuenciasObservadasCombinadas, 5);
+
+    } else if (distribucion.equals("uniforme")) {
+      for (int i = 0; i < intervalos.size(); i++) {
+        Double frecuenciaEsperada = (double) (n / intervalos.size());
+
+        frecuenciasEsperadasTemporales.add(frecuenciaEsperada);
+        intervalosCombinados.add(intervalos.get(i));
+        frecuenciasObservadasCombinadas.add(frecuencias.get(i));
+
+      }
+
       asegurarFrecuenciasMinimas(frecuenciasEsperadasTemporales, intervalosCombinados, frecuenciasObservadasCombinadas, 5);
     }
 
