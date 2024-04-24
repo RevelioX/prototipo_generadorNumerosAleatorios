@@ -7,11 +7,12 @@ import backend.org.generators.GeneradorNumerosNormales;
 import backend.org.generators.GeneradorNumerosUniformes;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.XChartPanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class Main extends JFrame {
+public class MainUI extends JFrame {
     private JTextField intervalField;
     private JButton generateButton;
     private JPanel chartPanel;
@@ -20,8 +21,10 @@ public class Main extends JFrame {
     private JTextField param2Field;
     private JLabel param1Label;
     private JLabel param2Label;
+    private CategoryChart chart;
+    private JTable table; // Agregado aquí
 
-    public Main() {
+    public MainUI() {
         super("Generador de Histograma");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 700);
@@ -87,19 +90,53 @@ public class Main extends JFrame {
         String param2Text = param2Field.getText();
         String intervaloText = intervalField.getText();
 
-        if (!intervaloText.isEmpty()) {
-            int intervalos = Integer.parseInt(intervaloText);
-            double param1 = Double.parseDouble(param1Text);
-            double param2 = param2Field.isVisible() ? Double.parseDouble(param2Text) : 1.0;
+        if (!intervaloText.isEmpty() && !param1Text.isEmpty()) {
+            int intervalos;
+            double param1;
+            double param2;
+            try {
+                intervalos = Integer.parseInt(intervaloText);
+                System.out.println("Intervalos: " + intervalos);
+            } catch (NumberFormatException e) {
+                System.out.println("Error parsing intervaloText: " + e.getMessage());
+                e.printStackTrace();
+                return;
+            }
+
+            try {
+                param1 = Double.parseDouble(param1Text);
+                System.out.println("Param1: " + param1);
+            } catch (NumberFormatException e) {
+                System.out.println("Error parsing param1Text: " + e.getMessage());
+                e.printStackTrace();
+                return;
+            }
+
+            // Verificación para evitar NumberFormatException si param2Text está vacío
+            if (!param2Text.isEmpty()) {
+                try {
+                    param2 = Double.parseDouble(param2Text);
+                    System.out.println("Param2: " + param2);
+                } catch (NumberFormatException e) {
+                    System.out.println("Error parsing param2Text: " + e.getMessage());
+                    e.printStackTrace();
+                    return;
+                }
+            } else {
+                param2 = 1.0; // Valor predeterminado si param2Text está vacío
+                System.out.println("Param2 (default): " + param2);
+            }
 
             String selectedGenerator = (String) generatorSelector.getSelectedItem();
 
             List<Double> datos = simulateData(selectedGenerator, param1, param2);
             if (datos != null) {
                 Histograma histograma = new Histograma(datos, intervalos, param1, param2, selectedGenerator);
-
-//                chartPanel.removeAll();
-//                chartPanel.add(new XChartPanel<>(chart));
+                chart = histograma.buildChart();
+                table = histograma.buildTable();
+                chartPanel.removeAll();
+                chartPanel.add(new XChartPanel<>(chart), BorderLayout.CENTER);
+                chartPanel.add(new JScrollPane(table), BorderLayout.EAST);
                 revalidate();
                 repaint();
             }
@@ -107,6 +144,7 @@ public class Main extends JFrame {
             JOptionPane.showMessageDialog(this, "Por favor, llene todos los campos de entrada.");
         }
     }
+
 
     private List<Double> simulateData(String selectedGenerator, double param1, double param2) {
         Generador generador;
@@ -126,6 +164,6 @@ public class Main extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Main().setVisible(true));
+        SwingUtilities.invokeLater(() -> new MainUI().setVisible(true));
     }
 }
