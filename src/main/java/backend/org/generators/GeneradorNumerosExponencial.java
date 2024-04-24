@@ -22,5 +22,8 @@ public class GeneradorNumerosExponencial extends Generador {
             valores.add(generado);
         }
     }
+    public String getNombre(){
+        return "Exponencial";
+    }
 
 }

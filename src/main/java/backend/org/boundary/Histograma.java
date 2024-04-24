@@ -59,8 +59,8 @@ public class Histograma {
       xData.add(key);
       yData.add(Long.parseLong(String.valueOf(yValue)));
     }
-    PruebaChiCuadrado pruebaChiCuadrado = new PruebaChiCuadrado();
-    pruebaChiCuadrado.calculoChi(xData, yData, tipoDistribucion, desviacion, media);
+    //PruebaChiCuadrado pruebaChiCuadrado = new PruebaChiCuadrado();
+    //pruebaChiCuadrado.calculoChi(xData, yData, tipoDistribucion, desviacion, media);
 
 
 

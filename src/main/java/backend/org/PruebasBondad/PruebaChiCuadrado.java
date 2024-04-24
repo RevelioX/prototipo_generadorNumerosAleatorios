@@ -19,7 +19,12 @@ public class PruebaChiCuadrado {
     this.n = (int) frecuencias.stream().mapToLong(Long::longValue).sum();
     Double chiTabla = 0.0;
 
-    ArrayList<Double> frecuenciasEsperadasTemporales = new ArrayList<>();
+    System.out.println("Intervalos: ");
+    System.out.println(intervalos);
+    System.out.println("Frecuencias: ");
+    System.out.println(frecuencias);
+
+    List<Double> frecuenciasEsperadasTemporales = new ArrayList<>();
     List<String> intervalosCombinados = new ArrayList<>();
     List<Long> frecuenciasObservadasCombinadas = new ArrayList<>();
 
@@ -143,13 +148,14 @@ public class PruebaChiCuadrado {
 
   public  double chiTabla(int gradosLibertad, double alfa) {
     // Crear una distribución chi cuadrado
-    ChiSquaredDistribution chiSquaredDistribution = new ChiSquaredDistribution(gradosLibertad);
+    //ChiSquaredDistribution chiSquaredDistribution = new ChiSquaredDistribution(gradosLibertad);
 
     // Calcular el valor crítico
-    return chiSquaredDistribution.inverseCumulativeProbability(1 - alfa);
+    //return chiSquaredDistribution.inverseCumulativeProbability(1 - alfa);
+    return 5;
   }
 
-  private void asegurarFrecuenciasMinimas(ArrayList<Double> frecuenciasEsperadas, List<String> intervalos, List<Long> frecuenciasObservadas, double minimoEsperado) {
+  private void asegurarFrecuenciasMinimas(List<Double> frecuenciasEsperadas, List<String> intervalos, List<Long> frecuenciasObservadas, double minimoEsperado) {
     int i = 0;
     while (i < frecuenciasEsperadas.size()) {
       if (frecuenciasEsperadas.get(i) < minimoEsperado) {

@@ -37,4 +37,22 @@ public abstract class Generador {
         valores = new ArrayList<>();
         return retornoValores   ;
     }
+
+    public String getNombre(){
+        return null;
+    }
+
+    public Double getMedia(){
+        return null;
+    }
+
+    public Double getDesviacion(){
+        return null;
+    }
+
+    public Double getLambda(){
+        return null;
+    }
+
+
 }

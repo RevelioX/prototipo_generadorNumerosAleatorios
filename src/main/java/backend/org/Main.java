@@ -99,7 +99,7 @@ public class Main extends JFrame {
             String selectedGenerator = (String) generatorSelector.getSelectedItem();
             System.out.println(selectedGenerator);
             new Histograma(simulateData(), intervalos,  param1,  param2, selectedGenerator);
-            // limpia el panel anterior
+
             chartPanel.validate();
 
 
