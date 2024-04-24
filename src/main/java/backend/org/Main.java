@@ -71,8 +71,8 @@ public class Main extends JFrame {
         if ("Normal".equals(selectedGenerator)) {
             param1Label.setText("Media:");
             param2Label.setText("Desviación:");
-            param1Field.setText("0");
-            param2Field.setText("0");
+            /*param1Field.setText("0");
+            param2Field.setText("0");*/
             param2Field.setVisible(true);
             param2Label.setVisible(true);
         } else if ("Uniforme".equals(selectedGenerator)) {
@@ -97,12 +97,10 @@ public class Main extends JFrame {
             double param2 = param2Field.isVisible() ? Double.parseDouble(param2Field.getText()) : 1.0;
             String selectedGenerator = (String) generatorSelector.getSelectedItem();
             System.out.println(selectedGenerator);
-            new Histograma(simulateData(), intervalos, (long) param1, (long) param2, selectedGenerator);
+            new Histograma(simulateData(), intervalos,  param1,  param2, selectedGenerator);
             // limpia el panel anterior
             chartPanel.validate();
 
-            double sumatoria = simulateData().stream().mapToDouble(Double::doubleValue).sum();
-            resultArea.setText("Sumatoria: " + (sumatoria / 100000) + "\n");
 
         } catch (NumberFormatException ex) {
             System.out.println(ex);
@@ -114,11 +112,11 @@ public class Main extends JFrame {
 
         String selectedGenerator = (String) generatorSelector.getSelectedItem();
         double param1 = Double.parseDouble(param1Field.getText());
-        System.out.println(param1);
+
         double param2 = param2Field.isVisible() ? Double.parseDouble(param2Field.getText()) : 1.0;
 
         if ("Normal".equals(selectedGenerator)) {
-            System.out.println("HOla");
+
             // Crear una instancia del generador
             GeneradorNumerosNormales generador = new GeneradorNumerosNormales(param1, param2);
             // Generar valores. Aquí se especifica cuántos números quieres generar.

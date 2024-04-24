@@ -16,7 +16,7 @@ public class Histograma {
   private final Map<String, Long> distributionMap;
   private final int numIntervalos;
 
-  public Histograma( List<Double> dataSet, int numIntervalos, Long media, Long desviacion, String tipoDistribucion) {
+  public Histograma( List<Double> dataSet, int numIntervalos, Double media, Double desviacion, String tipoDistribucion) {
     distributionMap = new TreeMap<>();
     this.numIntervalos = numIntervalos;
     processRawData(dataSet);

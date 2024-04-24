@@ -2,31 +2,35 @@ package backend.org.PruebasBondad;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.math3.distribution.ChiSquaredDistribution;
+
 
 public class PruebaChiCuadrado {
   private String distribucion;
   private ArrayList<Double> frecuenciasEsperadas = new ArrayList<>();
-  private Long media;
-  private Long desviacion;
+  private Double media;
+  private Double desviacion;
   private int n;
 
-  public Double calculoChi(List<String> intervalos, List<Long> frecuencias, String distrib, Long desv, Long med) {
+  public Double calculoChi(List<String> intervalos, List<Long> frecuencias, String distrib, Double desv, Double med) {
     this.distribucion = distrib;
     this.desviacion = desv;
     this.media = med;
     this.n = (int) frecuencias.stream().mapToLong(Long::longValue).sum();
+    Double chiTabla = 0.0;
 
     ArrayList<Double> frecuenciasEsperadasTemporales = new ArrayList<>();
     List<String> intervalosCombinados = new ArrayList<>();
     List<Long> frecuenciasObservadasCombinadas = new ArrayList<>();
 
-    if (distribucion.equals("Normal")) {
+    /*if (distribucion.equals("Normal")) {
       for (int i = 0; i < intervalos.size(); i++) {
         String[] partes = intervalos.get(i).split("-");
         Double limInf = Double.parseDouble(partes[0]);
         Double limSup = Double.parseDouble(partes[1]);
 
         Double marcaClase = (limInf + limSup) / 2;
+
         Double probabilidad = (1 / (desv * Math.sqrt(2 * Math.PI))) *
                 Math.exp(-0.5 * Math.pow((marcaClase - med) / desv, 2));
         Double frecuenciaEsperada = probabilidad * n;
@@ -37,8 +41,40 @@ public class PruebaChiCuadrado {
       }
 
       // Asegurar que todas las frecuencias esperadas superen un mínimo establecido antes de imprimir los resultados
+      asegurarFrecuenciasMinimas(frecuenciasEsperadasTemporales, intervalosCombinados, frecuenciasObservadasCombinadas, 5);*/
+    if (distribucion.equals("Normal")) {
+      for (int i = 0; i < intervalos.size(); i++) {
+        String[] partes = intervalos.get(i).split("-");
+        Double limInf = Double.parseDouble(partes[0]);
+        Double limSup = Double.parseDouble(partes[1]);
+
+        Double marcaClase = (limInf + limSup) / 2;
+
+        // Verifica que la desviación estándar no sea cero para evitar divisiones por cero
+
+        if (desv != 0) {
+          Double probabilidad = (1 / (desv * Math.sqrt(2 * Math.PI))) *
+                  Math.exp(-0.5 * Math.pow((marcaClase - med) / desv, 2));
+          Double frecuenciaEsperada = probabilidad * n;
+
+          frecuenciasEsperadasTemporales.add(frecuenciaEsperada);
+          intervalosCombinados.add(intervalos.get(i));
+          frecuenciasObservadasCombinadas.add(frecuencias.get(i));
+        } else {
+          // Si la desviación estándar es cero, no se puede calcular la probabilidad
+          System.err.println("Error: la desviación estándar es cero.");
+          // Puedes manejar este error de alguna manera apropiada para tu aplicación
+        }
+      }
+
+              // Asegurar que todas las frecuencias esperadas superen un mínimo establecido antes de imprimir los resultados
       asegurarFrecuenciasMinimas(frecuenciasEsperadasTemporales, intervalosCombinados, frecuenciasObservadasCombinadas, 5);
-    } else if (distribucion.equalsIgnoreCase("Exponencial")) {
+      int gradosLibertad = intervalosCombinados.size() - 1 - 0;
+      chiTabla = chiTabla(gradosLibertad,0.05);
+
+
+
+  } else if (distribucion.equalsIgnoreCase("Exponencial")) {
       for (int i = 0; i < intervalos.size(); i++) {
         String[] partes = intervalos.get(i).split("-");
         Double limInf = Double.parseDouble(partes[0]);
@@ -58,6 +94,11 @@ public class PruebaChiCuadrado {
       }
 
       asegurarFrecuenciasMinimas(frecuenciasEsperadasTemporales, intervalosCombinados, frecuenciasObservadasCombinadas, 5);
+      int gradosLibertad = intervalosCombinados.size() - 1 - 0;
+      System.out.println(gradosLibertad);
+      chiTabla = chiTabla(gradosLibertad,0.05);
+
+
 
     } else if (distribucion.equals("Uniforme")) {
       for (int i = 0; i < intervalos.size(); i++) {
@@ -70,6 +111,8 @@ public class PruebaChiCuadrado {
       }
 
       asegurarFrecuenciasMinimas(frecuenciasEsperadasTemporales, intervalosCombinados, frecuenciasObservadasCombinadas, 5);
+      int gradosLibertad = intervalosCombinados.size() - 1 - 0;
+      chiTabla = chiTabla(gradosLibertad,0.05);
     }
 
     Double chiCalculado = 0.0;
@@ -83,9 +126,27 @@ public class PruebaChiCuadrado {
               ", Frecuencia Esperada: " + frecuenciasEsperadasTemporales.get(i) +
               ", Frecuencia Observada: " + frecuenciasObservadasCombinadas.get(i));
     }
+
     System.out.println("Chi calculado: " + chiCalculado);
+    System.out.println("Calculo Chi tabla: "+chiTabla);
+
+    if (chiCalculado < chiTabla)  {
+      System.out.println("La hipotesis no se rechaza ");
+    } else{
+      System.out.println("La hipotesis se rechaza ");
+    }
+
 
     return chiCalculado;
+
+  }
+
+  public  double chiTabla(int gradosLibertad, double alfa) {
+    // Crear una distribución chi cuadrado
+    ChiSquaredDistribution chiSquaredDistribution = new ChiSquaredDistribution(gradosLibertad);
+
+    // Calcular el valor crítico
+    return chiSquaredDistribution.inverseCumulativeProbability(1 - alfa);
   }
 
   private void asegurarFrecuenciasMinimas(ArrayList<Double> frecuenciasEsperadas, List<String> intervalos, List<Long> frecuenciasObservadas, double minimoEsperado) {
