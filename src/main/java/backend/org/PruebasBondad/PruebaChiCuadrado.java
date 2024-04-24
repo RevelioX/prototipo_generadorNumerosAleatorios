@@ -20,7 +20,7 @@ public class PruebaChiCuadrado {
     List<String> intervalosCombinados = new ArrayList<>();
     List<Long> frecuenciasObservadasCombinadas = new ArrayList<>();
 
-    if (distribucion.equals("normal")) {
+    if (distribucion.equals("Normal")) {
       for (int i = 0; i < intervalos.size(); i++) {
         String[] partes = intervalos.get(i).split("-");
         Double limInf = Double.parseDouble(partes[0]);
@@ -38,16 +38,18 @@ public class PruebaChiCuadrado {
 
       // Asegurar que todas las frecuencias esperadas superen un mínimo establecido antes de imprimir los resultados
       asegurarFrecuenciasMinimas(frecuenciasEsperadasTemporales, intervalosCombinados, frecuenciasObservadasCombinadas, 5);
-    } else if (distribucion.equals("exponencial")) {
+    } else if (distribucion.equalsIgnoreCase("Exponencial")) {
       for (int i = 0; i < intervalos.size(); i++) {
         String[] partes = intervalos.get(i).split("-");
         Double limInf = Double.parseDouble(partes[0]);
         Double limSup = Double.parseDouble(partes[1]);
-
-        Double lambda = (double) (1 / media);
+        Double lambda = 1.0 / media;
 
         Double probabilidad = (1 - Math.exp(-lambda * limSup)) - (1 - Math.exp(-lambda * limInf));
 
+        if (probabilidad <= 0) {
+          continue;
+        }
         Double frecuenciaEsperada = probabilidad * n;
 
         frecuenciasEsperadasTemporales.add(frecuenciaEsperada);
@@ -57,7 +59,7 @@ public class PruebaChiCuadrado {
 
       asegurarFrecuenciasMinimas(frecuenciasEsperadasTemporales, intervalosCombinados, frecuenciasObservadasCombinadas, 5);
 
-    } else if (distribucion.equals("uniforme")) {
+    } else if (distribucion.equals("Uniforme")) {
       for (int i = 0; i < intervalos.size(); i++) {
         Double frecuenciaEsperada = (double) (n / intervalos.size());
 
@@ -71,19 +73,19 @@ public class PruebaChiCuadrado {
     }
 
     Double chiCalculado = 0.0;
-    for (int i = 0; i < intervalos.size(); i++) {
-      chiCalculado += Math.pow(frecuenciasObservadasCombinadas.get(i) - frecuenciasEsperadasTemporales.get(i), 2) / frecuenciasEsperadasTemporales.get(i);
+    for (int i = 0; i < frecuenciasEsperadasTemporales.size(); i++) {  // Use the modified size after list manipulations
+      chiCalculado += Math.pow(frecuenciasObservadasCombinadas.get(i) - frecuenciasEsperadasTemporales.get(i), 2) /
+              frecuenciasEsperadasTemporales.get(i);
     }
 
-    // Imprimir los resultados combinados
     for (int i = 0; i < frecuenciasEsperadasTemporales.size(); i++) {
       System.out.println("Intervalo: " + intervalosCombinados.get(i) +
               ", Frecuencia Esperada: " + frecuenciasEsperadasTemporales.get(i) +
               ", Frecuencia Observada: " + frecuenciasObservadasCombinadas.get(i));
     }
-    System.out.println("Chi calculado:" + chiCalculado);
+    System.out.println("Chi calculado: " + chiCalculado);
 
-    return chiCalculado; // Este retorno podría ser el resultado del cálculo de Chi-cuadrado
+    return chiCalculado;
   }
 
   private void asegurarFrecuenciasMinimas(ArrayList<Double> frecuenciasEsperadas, List<String> intervalos, List<Long> frecuenciasObservadas, double minimoEsperado) {
@@ -109,6 +111,3 @@ public class PruebaChiCuadrado {
     }
   }
 }
-
-
-
