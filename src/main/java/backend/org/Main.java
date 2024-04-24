@@ -1,6 +1,7 @@
 package backend.org;
 
 import backend.org.boundary.Histograma;
+import backend.org.generators.Generador;
 import backend.org.generators.GeneradorNumerosExponencial;
 import backend.org.generators.GeneradorNumerosNormales;
 import backend.org.generators.GeneradorNumerosUniformes;
@@ -112,28 +113,22 @@ public class Main extends JFrame {
 
         String selectedGenerator = (String) generatorSelector.getSelectedItem();
         double param1 = Double.parseDouble(param1Field.getText());
-
         double param2 = param2Field.isVisible() ? Double.parseDouble(param2Field.getText()) : 1.0;
 
-        if ("Normal".equals(selectedGenerator)) {
-
-            // Crear una instancia del generador
-            GeneradorNumerosNormales generador = new GeneradorNumerosNormales(param1, param2);
-            // Generar valores. Aquí se especifica cuántos números quieres generar.
-            generador.generarValor(1000000);  // Por ejemplo, generar 1,000,000 de números normales.
-            // Ahora se puede recuperar y retornar los datos generados
-            return generador.getAll();
-        } else if ("Uniforme".equals(selectedGenerator)) {
-            GeneradorNumerosUniformes generador = new GeneradorNumerosUniformes(param1, param2);
-            generador.generarValor(1000000);
-            return generador.getAll();
-        } else {
-            GeneradorNumerosExponencial generador = new GeneradorNumerosExponencial(param1);
-            generador.generarValor(1000000);
-            return generador.getAll();
+        Generador generador;
+        switch(selectedGenerator){
+            case "Normal":
+                generador = new GeneradorNumerosNormales(param1, param2);
+                break;
+            case "Uniforme":
+                generador = new GeneradorNumerosUniformes(param1, param2);
+                break;
+            default:
+                generador = new GeneradorNumerosExponencial(param1);
+                break;
         }
-
-
+        generador.generarValor(1000000);
+        return generador.getAll();
     }
 
     public static void main(String[] args) {
