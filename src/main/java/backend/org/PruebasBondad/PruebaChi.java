@@ -23,8 +23,10 @@ public class PruebaChi {
         switch (generador.getNombre()){
             case "Normal":
                 for(String intervalo : intervalos){
-                    Double limInf = Double.valueOf(intervalo.split("-")[0]);
-                    Double limSup = Double.valueOf(intervalo.split("-")[1]);
+                    System.out.println(intervalo);
+
+                    Double limInf = (Double) Double.parseDouble(intervalo.split("-")[0]);
+                    Double limSup = (Double) Double.parseDouble(intervalo.split("-")[1]);
 
                     Double marcaClase = (limInf + limSup) / 2;
 

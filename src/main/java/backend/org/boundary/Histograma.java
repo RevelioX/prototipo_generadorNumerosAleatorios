@@ -13,8 +13,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class Histograma {
-  private final Map<String, Long> distributionMap;
-  private final int numIntervalos;
+  public  Map<String, Long> distributionMap;
+  public int numIntervalos;
+
+  public Histograma(List<Double> valores, int numIntervalos){
+    this.numIntervalos = numIntervalos;
+    this.distributionMap = new TreeMap<>();
+    processRawData(valores);
+  }
 
   public Histograma( List<Double> dataSet, int numIntervalos, Double media, Double desviacion, String tipoDistribucion) {
     distributionMap = new TreeMap<>();
@@ -138,6 +144,7 @@ public class Histograma {
 
         String bin = String.format("%.2f-%.2f", lowerBoundary, upperBoundary).replace(",", ".");
         distributionMap.put(bin, observationFrequency);
+        System.out.println(distributionMap);
       }
     }
   }
