@@ -3,6 +3,7 @@ package backend.org.PruebasBondad;
 import backend.org.generators.Generador;
 import backend.org.generators.GeneradorNumerosNormales;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PruebaChi {
@@ -17,7 +18,8 @@ public class PruebaChi {
     }
 
     public double getValorCalculado() {
-        List<Double> probabilidadIntervalo;
+        int n = (int) frecuencias.stream().mapToLong(Long::longValue).sum();
+        List<Double> frecuenciasEsperadas = new ArrayList<Double>();
         switch (generador.getNombre()){
             case "Normal":
                 for(String intervalo : intervalos){
@@ -27,11 +29,17 @@ public class PruebaChi {
                     Double marcaClase = (limInf + limSup) / 2;
 
                     Double probabilidad = (1 / (generador.getMedia() * Math.sqrt(2 * Math.PI))) *
-                            Math.exp(-0.5 * Math.pow((marcaClase - generador.getMedia()) / generador.getDesviacion(), 2));
+                            Math.exp(-0.5 * Math.pow((marcaClase - generador.getMedia()) / generador.getDesviacion(), 2)) * (limSup- limInf);
 
-                    System.out.println("Intervalo: [" + limInf + "," + limSup + "]" + probabilidad);
+                    frecuenciasEsperadas.add(probabilidad * n);
+
+                    System.out.println(n + "Intervalo: [" + limInf + "," + limSup + "]" + probabilidad + " - " + probabilidad*n);
                 }
         }
-        return 0;
+        double valorChi = 0;
+        for(int i = 0; i < frecuencias.size(); i++){
+            valorChi = valorChi + Math.pow(frecuencias.get(i) - frecuenciasEsperadas.get(i),2)/frecuenciasEsperadas.get(i);
+        }
+        return valorChi;
     }
 }
