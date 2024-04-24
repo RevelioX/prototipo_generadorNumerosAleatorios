@@ -1,6 +1,7 @@
 package backend.org.boundary;
 
 import backend.org.PruebasBondad.PruebaChiCuadrado;
+import backend.org.intervalos.Intervalos;
 import org.apache.commons.math3.stat.Frequency;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
@@ -22,38 +23,13 @@ public class Histograma {
     processRawData(dataSet);
 
     List<Map.Entry<String, Long>> arr = new ArrayList<>(distributionMap.entrySet());
-    int n = arr.size();
-    for (int i = 0; i < n - 1; i++) {
-      boolean swapped = false;
-      for (int j = 0; j < n - i - 1; j++) {
-        String key = arr.get(j).getKey();
-        String[] parts = key.split("-");
-        String secondPart = parts[1];
-        double segundoElementoInt = Double.parseDouble(secondPart);
-
-        String key2 = arr.get(j + 1).getKey();
-        String[] parts2 = key2.split("-");
-        String secodPart2 = parts2[0];
-        double segundoElementoInt2 = Double.parseDouble(secodPart2);
-
-        if (segundoElementoInt > segundoElementoInt2) {
-          Map.Entry<String, Long> temp = arr.get(j);
-          arr.set(j, arr.get(j + 1));
-          arr.set(j + 1, temp);
-          swapped = true;
-        }
-      }
-      if (!swapped)
-        break;
-    }
-
-    System.out.println(arr);
-
-
+    Intervalos intervalos = new Intervalos();
+    List<Map.Entry<String, Long>> intervalos1 = intervalos.calcularIntervalos(arr);
 
     List<String> xData = new ArrayList<>();
     List<Long> yData = new ArrayList<>();
-    for (Map.Entry<String, Long> entry : arr) {
+
+    for (Map.Entry<String, Long> entry : intervalos1) {
       String key = entry.getKey();
       Long yValue = entry.getValue();
       xData.add(key);
@@ -71,7 +47,7 @@ public class Histograma {
 
 
 
-  private CategoryChart buildChart(List<String> xData, List<Long> yData) {
+  public CategoryChart buildChart(List<String> xData, List<Long> yData) {
 
     CategoryChart chart = new CategoryChartBuilder().width(1000).height(600)
             .title("Distribucion")

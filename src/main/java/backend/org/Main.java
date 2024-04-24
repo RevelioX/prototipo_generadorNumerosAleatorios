@@ -5,15 +5,15 @@ import backend.org.generators.Generador;
 import backend.org.generators.GeneradorNumerosExponencial;
 import backend.org.generators.GeneradorNumerosNormales;
 import backend.org.generators.GeneradorNumerosUniformes;
-import java.util.List;
+import org.knowm.xchart.CategoryChart;
+import org.knowm.xchart.XChartPanel;
 import javax.swing.*;
 import java.awt.*;
-
+import java.util.List;
 
 public class Main extends JFrame {
     private JTextField intervalField;
     private JButton generateButton;
-    private JTextArea resultArea;
     private JPanel chartPanel;
     private JComboBox<String> generatorSelector;
     private JTextField param1Field;
@@ -48,17 +48,9 @@ public class Main extends JFrame {
         inputPanel.add(param2Label);
         inputPanel.add(param2Field);
 
-
-
-        generateButton = new JButton("Generar");
-
+        generateButton = new JButton("Generar Histograma");
         inputPanel.add(generateButton);
         add(inputPanel, BorderLayout.NORTH);
-
-        resultArea = new JTextArea();
-        resultArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(resultArea);
-        add(scrollPane, BorderLayout.SOUTH);
 
         chartPanel = new JPanel();
         chartPanel.setLayout(new BorderLayout());
@@ -72,8 +64,8 @@ public class Main extends JFrame {
         if ("Normal".equals(selectedGenerator)) {
             param1Label.setText("Media:");
             param2Label.setText("Desviación:");
-            /*param1Field.setText("0");
-            param2Field.setText("0");*/
+            param1Field.setText("0");
+            param2Field.setText("0");
             param2Field.setVisible(true);
             param2Label.setVisible(true);
         } else if ("Uniforme".equals(selectedGenerator)) {
@@ -90,33 +82,35 @@ public class Main extends JFrame {
         }
     }
 
-
     private void generateHistogram() {
-        try {
-            int intervalos = Integer.parseInt(intervalField.getText());
-            double param1 = Double.parseDouble(param1Field.getText());
-            double param2 = param2Field.isVisible() ? Double.parseDouble(param2Field.getText()) : 1.0;
+        String param1Text = param1Field.getText();
+        String param2Text = param2Field.getText();
+        String intervaloText = intervalField.getText();
+
+        if (!intervaloText.isEmpty()) {
+            int intervalos = Integer.parseInt(intervaloText);
+            double param1 = Double.parseDouble(param1Text);
+            double param2 = param2Field.isVisible() ? Double.parseDouble(param2Text) : 1.0;
+
             String selectedGenerator = (String) generatorSelector.getSelectedItem();
-            System.out.println(selectedGenerator);
-            new Histograma(simulateData(), intervalos,  param1,  param2, selectedGenerator);
-            // limpia el panel anterior
-            chartPanel.validate();
 
+            List<Double> datos = simulateData(selectedGenerator, param1, param2);
+            if (datos != null) {
+                Histograma histograma = new Histograma(datos, intervalos, param1, param2, selectedGenerator);
 
-        } catch (NumberFormatException ex) {
-            System.out.println(ex);
-            JOptionPane.showMessageDialog(this, "Por favor, ingrese un número válido.");
+//                chartPanel.removeAll();
+//                chartPanel.add(new XChartPanel<>(chart));
+                revalidate();
+                repaint();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, llene todos los campos de entrada.");
         }
     }
 
-    private List<Double> simulateData() {
-
-        String selectedGenerator = (String) generatorSelector.getSelectedItem();
-        double param1 = Double.parseDouble(param1Field.getText());
-        double param2 = param2Field.isVisible() ? Double.parseDouble(param2Field.getText()) : 1.0;
-
+    private List<Double> simulateData(String selectedGenerator, double param1, double param2) {
         Generador generador;
-        switch(selectedGenerator){
+        switch(selectedGenerator) {
             case "Normal":
                 generador = new GeneradorNumerosNormales(param1, param2);
                 break;
