@@ -109,7 +109,7 @@ public class PruebaChiCuadrado {
     System.out.println("Calculo Chi tabla: "+chiTabla);
 
     if (chiCalculado < chiTabla)  {
-      System.out.println("La hipotesis no se rechaza ");
+      System.out.println("La hipotesis se acepta ");
     } else{
       System.out.println("La hipotesis se rechaza ");
     }

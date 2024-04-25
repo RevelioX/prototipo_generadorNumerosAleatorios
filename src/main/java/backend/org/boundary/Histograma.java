@@ -25,7 +25,6 @@ public class Histograma {
     processRawData(dataSet);
 
     List<Map.Entry<String, Long>> arr = new ArrayList<>(distributionMap.entrySet());
-    System.out.println(distributionMap);
     Intervalos intervalos = new Intervalos();
 //    System.out.println(arr);
     List<Map.Entry<String, Long>> intervalos1 = intervalos.calcularIntervalos(arr);

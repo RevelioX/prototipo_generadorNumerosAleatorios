@@ -19,6 +19,8 @@ public class MainUI extends JFrame {
     private JComboBox<String> generatorSelector;
     private JTextField param1Field;
     private JTextField param2Field;
+
+    private JTextField numerosField;
     private JLabel param1Label;
     private JLabel param2Label;
     private CategoryChart chart;
@@ -31,7 +33,7 @@ public class MainUI extends JFrame {
         setLayout(new BorderLayout());
 
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(5, 2, 10, 10));
+        inputPanel.setLayout(new GridLayout(6, 2, 10, 10));
         inputPanel.add(new JLabel("Ingrese tamaño de intervalo:"));
         intervalField = new JTextField(5);
         inputPanel.add(intervalField);
@@ -50,6 +52,10 @@ public class MainUI extends JFrame {
         inputPanel.add(param1Field);
         inputPanel.add(param2Label);
         inputPanel.add(param2Field);
+
+        inputPanel.add(new JLabel("Cant Numeros:"));
+        numerosField = new JTextField("10000", 10);
+        inputPanel.add(numerosField);
 
         generateButton = new JButton("Generar Histograma");
         inputPanel.add(generateButton);
@@ -132,7 +138,6 @@ public class MainUI extends JFrame {
 
             List<Double> datos = simulateData(selectedGenerator, param1, param2);
             if (datos != null) {
-                System.out.println(datos);
                 Histograma histograma = new Histograma(datos, intervalos, param1, param2, selectedGenerator);
                 chart = histograma.buildChart();
                 table = histograma.buildTable();
@@ -158,10 +163,14 @@ public class MainUI extends JFrame {
                 generador = new GeneradorNumerosUniformes(param1, param2);
                 break;
             default:
+                if(param1 < 0){
+                    System.out.println("No se pueden generar exponenciales con lambda negativo.");
+                    System.exit(0);
+                }
                 generador = new GeneradorNumerosExponencial(param1);
                 break;
         }
-        generador.generarValor(10000);
+        generador.generarValor(Integer.parseInt(numerosField.getText()));
         return generador.getAll();
     }
 

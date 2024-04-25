@@ -23,7 +23,7 @@ public class PruebaKs {
         Double tablaKS = 1.36 / Math.sqrt(n);
         System.out.println("Valor KS: " + maxDiferencia);
         System.out.println("Valor TablaKS:" +  tablaKS);
-        if( maxDiferencia < tablaKS) System.out.println("ACEPTA KS");
-        if ( maxDiferencia > tablaKS) System.out.println("RECHAZA KS");
+        if( maxDiferencia < tablaKS) System.out.println("Se acepta la hipotesis");
+        if ( maxDiferencia > tablaKS) System.out.println("Se rechaza la hipotesis");
   }
 }
