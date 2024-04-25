@@ -26,4 +26,8 @@ public class GeneradorNumerosExponencial extends Generador {
         return "Exponencial";
     }
 
+    public Double getLambda(){
+        return lambda;
+    }
+
 }

@@ -25,6 +25,8 @@ public class MainUI extends JFrame {
     private CategoryChart chart;
     private JTable table; // Agregado aquí
 
+    private Generador generador;
+
     public MainUI() {
         super("Generador de Histograma");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -134,7 +136,7 @@ public class MainUI extends JFrame {
             List<Double> datos = simulateData(selectedGenerator, param1, param2);
             if (datos != null) {
                 //System.out.println(datos);
-                Histograma histograma = new Histograma(datos, intervalos, param1, param2, selectedGenerator);
+                Histograma histograma = new Histograma(datos, intervalos, param1, param2, selectedGenerator, generador);
                 chart = histograma.buildChart();
                 table = histograma.buildTable();
                 chartPanel.removeAll();
@@ -162,8 +164,9 @@ public class MainUI extends JFrame {
                 generador = new GeneradorNumerosExponencial(param1);
                 break;
         }
-        generador.generarValor(100000);
+        generador.generarValor(10000000);
         valores = generador.getAll();
+        this.generador = generador;
         return valores;
     }
 

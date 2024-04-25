@@ -46,8 +46,19 @@ public class PruebaChi {
 
                     Double probabilidad = (double) (n / intervalos.size());
                     frecuenciasEsperadas.add(probabilidad);
-
                 }
+                break;
+            case "Exponencial":
+                for(String intervalo: intervalos){
+                    Double limInf = (Double) Double.parseDouble(intervalo.split(":")[0]);
+                    Double limSup = (Double) Double.parseDouble(intervalo.split(":")[1]);
+
+                    Double marcaClase = (limInf + limSup) / 2;
+
+                    Double probabilidad = (1-Math.exp(-generador.getLambda()*limSup))-(1-Math.exp(-generador.getLambda()*limInf));
+                    frecuenciasEsperadas.add(probabilidad * n);
+                }
+                break;
         }
         double valorChi = 0;
         for(int i = 0; i < frecuencias.size(); i++){
@@ -58,8 +69,12 @@ public class PruebaChi {
     }
 
     public double chiTabla(double alfa) {
+        int m = 0;
+        if(generador.getNombre() == "Normal") m = 2;
+        if(generador.getNombre() == "Uniforme") m = 0;
+        if(generador.getNombre() == "Exponencial") m = 1;
         // Crear una distribución chi cuadrado
-        ChiSquaredDistribution chiSquaredDistribution = new ChiSquaredDistribution(intervalos.size() - 1 - 2);
+        ChiSquaredDistribution chiSquaredDistribution = new ChiSquaredDistribution(intervalos.size() - 1 - m);
 
         // Calcular el valor crítico
         return chiSquaredDistribution.inverseCumulativeProbability(1 - alfa);

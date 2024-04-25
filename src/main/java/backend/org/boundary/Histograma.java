@@ -2,10 +2,10 @@ package backend.org.boundary;
 
 import backend.org.PruebasBondad.PruebaChi;
 import backend.org.generators.Generador;
+import backend.org.generators.GeneradorNumerosExponencial;
 import backend.org.generators.GeneradorNumerosNormales;
 import backend.org.generators.GeneradorNumerosUniformes;
 import backend.org.intervalos.Intervalos;
-import backend.org.PruebasBondad.PruebaChiCuadrado;
 import org.apache.commons.math3.stat.Frequency;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
@@ -22,8 +22,10 @@ public class Histograma {
 
   private List<String> xData = new ArrayList<>();
   private List<Long> yData = new ArrayList<>();
+  private Generador generador;
 
-  public Histograma(List<Double> dataSet, int numIntervalos, double media, Double desviacion, String tipoDistribucion) {
+  public Histograma(List<Double> dataSet, int numIntervalos, double media, Double desviacion, String tipoDistribucion, Generador generador) {
+    this.generador = generador;
     distributionMap = new TreeMap<>();
     this.numIntervalos = numIntervalos;
     processRawData(dataSet);
@@ -110,10 +112,16 @@ public class Histograma {
         frecuencias.add(entry.getValue());
       }
 
-      Generador generador = new GeneradorNumerosNormales(5,0.5);
       PruebaChi p = new PruebaChi(intervalos,frecuencias,generador);
-      System.out.println("VALOR CHI: " + p.getValorCalculado());
-      System.out.println("VALOR TABLA: " + p.chiTabla(0.80));
+      double valorChi = p.getValorCalculado();
+      double valorChiTabla = p.chiTabla(0.05);
+      System.out.println("VALOR CHI: " + valorChi);
+      System.out.println("VALOR TABLA: " + valorChiTabla);
+      if(valorChi < valorChiTabla){
+        System.out.println("SE ACEPTO! FUNCIONO");
+      }else{
+        System.out.println("No funciona mi loco, deja la carrera");
+      }
       //FIN CODIGO AUX.
     }
   }
