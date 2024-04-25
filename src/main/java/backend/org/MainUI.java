@@ -81,7 +81,7 @@ public class MainUI extends JFrame {
         } else {
             param2Field.setVisible(false);
             param2Label.setVisible(false);
-            param1Label.setText("Media:");
+            param1Label.setText("Lambda:");
         }
     }
 
@@ -161,7 +161,7 @@ public class MainUI extends JFrame {
                 generador = new GeneradorNumerosExponencial(param1);
                 break;
         }
-        generador.generarValor(1000000);
+        generador.generarValor(10000);
         return generador.getAll();
     }
 

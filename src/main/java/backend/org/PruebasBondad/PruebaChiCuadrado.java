@@ -24,28 +24,21 @@ public class PruebaChiCuadrado {
     List<Long> frecuenciasObservadasCombinadas = new ArrayList<>();
 
 
-    if (distribucion.equals("Normal")) {
-      for (int i = 0; i < intervalos.size(); i++) {
-        String[] partes = intervalos.get(i).split("-");
-        Double limInf = Double.parseDouble(partes[0]);
-        Double limSup = Double.parseDouble(partes[1]);
+      if (distribucion.equals("Normal")) {
+        for (int i = 0; i < intervalos.size(); i++) {
+          String[] partes = intervalos.get(i).split(" - ");
+          Double limInf = parseLimit(partes[0]);
+          Double limSup = parseLimit(partes[1]);
 
-        Double marcaClase = (limInf + limSup) / 2;
-
-        // Verifica que la desviación estándar no sea cero para evitar divisiones por cero
-
-        if (desv != 0) {
+          Double marcaClase = (limInf + limSup) / 2;
           Double probabilidad = (1 / (desv * Math.sqrt(2 * Math.PI))) *
-                  Math.exp(-0.5 * Math.pow((marcaClase - med) / desv, 2));
+                  Math.exp(-0.5 * Math.pow((marcaClase - med) / desv, 2))*(limSup-limInf);
           Double frecuenciaEsperada = probabilidad * n;
 
           frecuenciasEsperadasTemporales.add(frecuenciaEsperada);
           intervalosCombinados.add(intervalos.get(i));
           frecuenciasObservadasCombinadas.add(frecuencias.get(i));
-        } else {
-          System.err.println("Error: la desviación estándar es cero.");
         }
-      }
 
       // Asegurar que todas las frecuencias esperadas superen un mínimo establecido antes de imprimir los resultados
       asegurarFrecuenciasMinimas(frecuenciasEsperadasTemporales, intervalosCombinados, frecuenciasObservadasCombinadas, 5);
@@ -55,28 +48,31 @@ public class PruebaChiCuadrado {
 
 
   } else if (distribucion.equalsIgnoreCase("Exponencial")) {
-      for (int i = 0; i < intervalos.size(); i++) {
-        String[] partes = intervalos.get(i).split("-");
-        double limInf = Double.parseDouble(partes[0]);
-        double limSup = Double.parseDouble(partes[1]);
-        double lambda = 1.0 / media;
+        double lambda = media;
+        System.out.println("Lambda" + lambda);
+        for (int i = 0; i < intervalos.size(); i++) {
+          String[] partes = intervalos.get(i).split("-");
+          double limInf = Double.parseDouble(partes[0]);
+          double limSup = Double.parseDouble(partes[1]);
 
-        Double probabilidad = (1 - Math.exp(-lambda * limSup)) - (1 - Math.exp(-lambda * limInf));
 
-        if (probabilidad <= 0) {
-          continue;
+          Double probabilidad = (1- Math.exp(-lambda * limSup)) - (1 - Math.exp(-lambda * limInf));
+          System.out.println(probabilidad);
+          if (probabilidad <= 0) {
+            continue;
+          }
+          Double frecuenciaEsperada = probabilidad * n;
+
+          frecuenciasEsperadasTemporales.add(frecuenciaEsperada);
+          intervalosCombinados.add(intervalos.get(i));
+          frecuenciasObservadasCombinadas.add(frecuencias.get(i));
         }
-        Double frecuenciaEsperada = probabilidad * n;
 
-        frecuenciasEsperadasTemporales.add(frecuenciaEsperada);
-        intervalosCombinados.add(intervalos.get(i));
-        frecuenciasObservadasCombinadas.add(frecuencias.get(i));
-      }
+        asegurarFrecuenciasMinimas(frecuenciasEsperadasTemporales, intervalosCombinados, frecuenciasObservadasCombinadas, 5);
 
-      asegurarFrecuenciasMinimas(frecuenciasEsperadasTemporales, intervalosCombinados, frecuenciasObservadasCombinadas, 5);
-      int gradosLibertad = intervalosCombinados.size() - 1 - 0;
-      System.out.println(gradosLibertad);
-      chiTabla = chiTabla(gradosLibertad,0.05);
+        int gradosLibertad = intervalosCombinados.size() - 1 - 0;
+        System.out.println(gradosLibertad);
+        chiTabla = chiTabla(gradosLibertad,0.05);
 
 
 
@@ -151,4 +147,14 @@ public class PruebaChiCuadrado {
       i++;
     }
   }
+  private double parseLimit(String limit) {
+    limit = limit.replace("(", "").replace(")", "").trim();
+    try {
+      return Double.parseDouble(limit);
+    } catch (NumberFormatException e) {
+      System.err.println("Error parsing number: " + limit);
+      return 0; // Considerar lanzar una excepción según el manejo de error deseado.
+    }
+  }
+
 }

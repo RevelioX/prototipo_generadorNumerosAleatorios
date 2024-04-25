@@ -40,8 +40,8 @@ public class Histograma {
       yData.add(yValue);
     }
 
-//    PruebaChiCuadrado pruebaChiCuadrado = new PruebaChiCuadrado();
-//    pruebaChiCuadrado.calculoChi(xData, yData, tipoDistribucion, desviacion, media);
+    PruebaChiCuadrado pruebaChiCuadrado = new PruebaChiCuadrado();
+    pruebaChiCuadrado.calculoChi(xData, yData, tipoDistribucion, desviacion, media);
 
   }
 
