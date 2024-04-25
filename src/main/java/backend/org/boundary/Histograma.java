@@ -26,6 +26,7 @@ public class Histograma {
       processRawData(dataSet);
 
       List<Map.Entry<String, Long>> arr = new ArrayList<>(distributionMap.entrySet());
+      System.out.println(distributionMap);
       int n = arr.size();
       for (int i = 0; i < n - 1; i++) {
         boolean swapped = false;
@@ -33,12 +34,12 @@ public class Histograma {
           String key = arr.get(j).getKey();
           String[] parts = key.split("-");
           String secondPart = parts[1];
-          double segundoElementoInt = Double.parseDouble(secondPart);
+          Double segundoElementoInt = Double.parseDouble(secondPart);
 
           String key2 = arr.get(j + 1).getKey();
           String[] parts2 = key2.split("-");
           String secodPart2 = parts2[0];
-          double segundoElementoInt2 = Double.parseDouble(secodPart2);
+          Double segundoElementoInt2 = Double.parseDouble(secodPart2);
 
           if (segundoElementoInt > segundoElementoInt2) {
             Map.Entry<String, Long> temp = arr.get(j);
@@ -116,6 +117,7 @@ public class Histograma {
   }
 
   private void processRawData(List<Double> datasetList) {
+    System.out.println(datasetList);
     Frequency frequency = new Frequency();
     datasetList.forEach(frequency::addValue);
 
