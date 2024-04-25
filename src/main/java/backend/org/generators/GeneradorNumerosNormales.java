@@ -36,5 +36,17 @@ public class GeneradorNumerosNormales extends Generador {
             valores.add(nroNormal2);
         }
     }
+    public String getNombre(){
+        return "Normal";
+    }
+
+    public Double getMedia(){
+        return media;
+    }
+
+    public Double getDesviacion(){
+        return desviacion;
+    }
+
 
 }

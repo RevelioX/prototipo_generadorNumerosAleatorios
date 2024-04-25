@@ -1,5 +1,9 @@
 package backend.org.boundary;
 
+import backend.org.PruebasBondad.PruebaChi;
+import backend.org.generators.Generador;
+import backend.org.generators.GeneradorNumerosNormales;
+import backend.org.generators.GeneradorNumerosUniformes;
 import backend.org.intervalos.Intervalos;
 import backend.org.PruebasBondad.PruebaChiCuadrado;
 import org.apache.commons.math3.stat.Frequency;
@@ -95,13 +99,29 @@ public class Histograma {
         String bin = formatInterval(lowerBoundary, upperBoundary);
         distributionMap.put(bin, observationFrequency);
       }
+      //CODIGO AUXILIAR PARA PROBAR CHI
+      List<String> intervalos = new ArrayList<String>();
+      List<Long> frecuencias = new ArrayList<Long>();
+
+
+
+      for (Map.Entry<String, Long> entry : distributionMap.entrySet()) {
+        intervalos.add(entry.getKey());
+        frecuencias.add(entry.getValue());
+      }
+
+      Generador generador = new GeneradorNumerosNormales(5,0.5);
+      PruebaChi p = new PruebaChi(intervalos,frecuencias,generador);
+      System.out.println("VALOR CHI: " + p.getValorCalculado());
+      System.out.println("VALOR TABLA: " + p.chiTabla(0.80));
+      //FIN CODIGO AUX.
     }
   }
 
   private String formatInterval(double start, double end) {
     String formattedStart = formatNumber(start);
     String formattedEnd = formatNumber(end);
-    return formattedStart + " - " + formattedEnd;
+    return formattedStart + " : " + formattedEnd;
   }
 
   private String formatNumber(double number) {

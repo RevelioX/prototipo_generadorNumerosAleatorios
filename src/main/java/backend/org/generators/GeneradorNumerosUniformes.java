@@ -23,6 +23,10 @@ public class GeneradorNumerosUniformes extends Generador {
 
     }
 
+    public String getNombre(){
+        return "Uniforme";
+    }
+
 
 
 }

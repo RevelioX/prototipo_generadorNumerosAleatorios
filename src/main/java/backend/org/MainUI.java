@@ -13,6 +13,7 @@ import java.awt.*;
 import java.util.List;
 
 public class MainUI extends JFrame {
+    private List<Double> valores;
     private JTextField intervalField;
     private JButton generateButton;
     private JPanel chartPanel;
@@ -132,7 +133,7 @@ public class MainUI extends JFrame {
 
             List<Double> datos = simulateData(selectedGenerator, param1, param2);
             if (datos != null) {
-                System.out.println(datos);
+                //System.out.println(datos);
                 Histograma histograma = new Histograma(datos, intervalos, param1, param2, selectedGenerator);
                 chart = histograma.buildChart();
                 table = histograma.buildTable();
@@ -161,8 +162,9 @@ public class MainUI extends JFrame {
                 generador = new GeneradorNumerosExponencial(param1);
                 break;
         }
-        generador.generarValor(1000000);
-        return generador.getAll();
+        generador.generarValor(100000);
+        valores = generador.getAll();
+        return valores;
     }
 
     public static void main(String[] args) {
