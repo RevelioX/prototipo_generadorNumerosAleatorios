@@ -15,21 +15,21 @@ public class Intervalos {
             for (int j = 0; j < n - i - 1; j++) {
                 String key = arr.get(j).getKey();
                 String[] parts = key.split("-");
-                if (parts.length != 2) {
-                    // La cadena no tiene el formato esperado, continuar con la siguiente iteración
+                if (parts.length != 1) {
                     continue;
                 }
                 String secondPart = parts[1];
-                // Verificar si la parte de la cadena no está vacía antes de convertirla a un número
+
                 if (secondPart.isEmpty()) {
-                    // La parte de la cadena está vacía, continuar con la siguiente iteración
                     continue;
                 }
+
+                System.out.println("Sengunda parte" + secondPart);
                 double segundoElementoInt = Double.parseDouble(secondPart);
 
                 String key2 = arr.get(j + 1).getKey();
                 String[] parts2 = key2.split("-");
-                if (parts2.length != 2) {
+                if (parts2.length != 1) {
                     // La cadena no tiene el formato esperado, continuar con la siguiente iteración
                     continue;
                 }
@@ -51,7 +51,7 @@ public class Intervalos {
             if (!swapped)
                 break;
         }
-
+        System.out.println(arr);
         return arr;
     }
 }

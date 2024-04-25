@@ -28,7 +28,9 @@ public class Histograma {
     processRawData(dataSet);
 
     List<Map.Entry<String, Long>> arr = new ArrayList<>(distributionMap.entrySet());
+    System.out.println(distributionMap);
     Intervalos intervalos = new Intervalos();
+//    System.out.println(arr);
     List<Map.Entry<String, Long>> intervalos1 = intervalos.calcularIntervalos(arr);
 //
 //    List<String> xData = new ArrayList<>();
@@ -41,8 +43,8 @@ public class Histograma {
       yData.add(yValue);
     }
 
-    PruebaChiCuadrado pruebaChiCuadrado = new PruebaChiCuadrado();
-    pruebaChiCuadrado.calculoChi(xData, yData, tipoDistribucion, desviacion, media);
+//    PruebaChiCuadrado pruebaChiCuadrado = new PruebaChiCuadrado();
+//    pruebaChiCuadrado.calculoChi(xData, yData, tipoDistribucion, desviacion, media);
 
 //    CategoryChart chart = buildChart();
 //    JTable table = buildTable(xData, yData);
@@ -113,9 +115,23 @@ public class Histograma {
           }
         }
 
-        String bin = String.format("%.2f-%.2f", lowerBoundary, upperBoundary).replace(",", ".");
+        String bin = formatInterval(lowerBoundary, upperBoundary);
+        System.out.println(bin);
         distributionMap.put(bin, observationFrequency);
       }
+    }
+  }
+
+  private String formatInterval(double start, double end) {
+    // Eliminación de un guión doble en caso de que ambos números sean negativos
+    String formattedStart = String.format("%.2f", start).replace(",", ".");
+    String formattedEnd = String.format("%.2f", end).replace(",", ".");
+    if (start < 0 && end < 0) {
+      // Reemplazar el doble guión con un único guión si ambos son negativos
+      return formattedStart + "-" + formattedEnd.substring(1);
+    } else {
+      // Formato normal
+      return formattedStart + "-" + formattedEnd;
     }
   }
 }

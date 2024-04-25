@@ -90,6 +90,7 @@ public class MainUI extends JFrame {
         String param2Text = param2Field.getText();
         String intervaloText = intervalField.getText();
 
+
         if (!intervaloText.isEmpty() && !param1Text.isEmpty()) {
             int intervalos;
             double param1;
@@ -131,6 +132,7 @@ public class MainUI extends JFrame {
 
             List<Double> datos = simulateData(selectedGenerator, param1, param2);
             if (datos != null) {
+                System.out.println(datos);
                 Histograma histograma = new Histograma(datos, intervalos, param1, param2, selectedGenerator);
                 chart = histograma.buildChart();
                 table = histograma.buildTable();
