@@ -5,12 +5,9 @@ import backend.org.PruebasBondad.PruebaChiCuadrado;
 import org.apache.commons.math3.stat.Frequency;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
-import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.style.Styler;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.Map;
@@ -46,9 +43,6 @@ public class Histograma {
 //    PruebaChiCuadrado pruebaChiCuadrado = new PruebaChiCuadrado();
 //    pruebaChiCuadrado.calculoChi(xData, yData, tipoDistribucion, desviacion, media);
 
-//    CategoryChart chart = buildChart();
-//    JTable table = buildTable(xData, yData);
-//    displayChartAndTable(chart, table);
   }
 
   public CategoryChart buildChart() {
@@ -77,22 +71,6 @@ public class Histograma {
     return new JTable(model);
   }
 
-//  private void displayChartAndTable(CategoryChart chart, JTable table) {
-//    JPanel chartPanel = new XChartPanel<>(chart);
-//    JScrollPane tableScrollPane = new JScrollPane(table);
-//    tableScrollPane.setPreferredSize(new Dimension(400, 600));
-//
-//    JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, chartPanel, tableScrollPane);
-//    splitPane.setDividerLocation(900);
-//
-//    JFrame frame = new JFrame("Distribución y Frecuencia");
-//    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Cambio aquí
-//    frame.getContentPane().add(splitPane);
-//    frame.pack();
-//    frame.setLocationRelativeTo(null);
-//    frame.setVisible(true);
-//  }
-
   private void processRawData(List<Double> datasetList) {
     Frequency frequency = new Frequency();
     datasetList.forEach(frequency::addValue);
@@ -114,24 +92,24 @@ public class Histograma {
             observationFrequency++;
           }
         }
-
         String bin = formatInterval(lowerBoundary, upperBoundary);
-        System.out.println(bin);
         distributionMap.put(bin, observationFrequency);
       }
     }
   }
 
   private String formatInterval(double start, double end) {
-    // Eliminación de un guión doble en caso de que ambos números sean negativos
-    String formattedStart = String.format("%.2f", start).replace(",", ".");
-    String formattedEnd = String.format("%.2f", end).replace(",", ".");
-    if (start < 0 && end < 0) {
-      // Reemplazar el doble guión con un único guión si ambos son negativos
-      return formattedStart + "-" + formattedEnd.substring(1);
-    } else {
-      // Formato normal
-      return formattedStart + "-" + formattedEnd;
-    }
+    String formattedStart = formatNumber(start);
+    String formattedEnd = formatNumber(end);
+    return formattedStart + " - " + formattedEnd;
   }
+
+  private String formatNumber(double number) {
+    String formatted = String.format(Locale.US, "%.2f", number);
+    if (number < 0) {
+      formatted = "(" + formatted + ")";
+    }
+    return formatted;
+  }
+
 }

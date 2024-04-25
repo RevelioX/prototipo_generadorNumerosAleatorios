@@ -23,25 +23,7 @@ public class PruebaChiCuadrado {
     List<String> intervalosCombinados = new ArrayList<>();
     List<Long> frecuenciasObservadasCombinadas = new ArrayList<>();
 
-    /*if (distribucion.equals("Normal")) {
-      for (int i = 0; i < intervalos.size(); i++) {
-        String[] partes = intervalos.get(i).split("-");
-        Double limInf = Double.parseDouble(partes[0]);
-        Double limSup = Double.parseDouble(partes[1]);
 
-        Double marcaClase = (limInf + limSup) / 2;
-
-        Double probabilidad = (1 / (desv * Math.sqrt(2 * Math.PI))) *
-                Math.exp(-0.5 * Math.pow((marcaClase - med) / desv, 2));
-        Double frecuenciaEsperada = probabilidad * n;
-
-        frecuenciasEsperadasTemporales.add(frecuenciaEsperada);
-        intervalosCombinados.add(intervalos.get(i));
-        frecuenciasObservadasCombinadas.add(frecuencias.get(i));
-      }
-
-      // Asegurar que todas las frecuencias esperadas superen un mínimo establecido antes de imprimir los resultados
-      asegurarFrecuenciasMinimas(frecuenciasEsperadasTemporales, intervalosCombinados, frecuenciasObservadasCombinadas, 5);*/
     if (distribucion.equals("Normal")) {
       for (int i = 0; i < intervalos.size(); i++) {
         String[] partes = intervalos.get(i).split("-");
@@ -61,13 +43,11 @@ public class PruebaChiCuadrado {
           intervalosCombinados.add(intervalos.get(i));
           frecuenciasObservadasCombinadas.add(frecuencias.get(i));
         } else {
-          // Si la desviación estándar es cero, no se puede calcular la probabilidad
           System.err.println("Error: la desviación estándar es cero.");
-          // Puedes manejar este error de alguna manera apropiada para tu aplicación
         }
       }
 
-              // Asegurar que todas las frecuencias esperadas superen un mínimo establecido antes de imprimir los resultados
+      // Asegurar que todas las frecuencias esperadas superen un mínimo establecido antes de imprimir los resultados
       asegurarFrecuenciasMinimas(frecuenciasEsperadasTemporales, intervalosCombinados, frecuenciasObservadasCombinadas, 5);
       int gradosLibertad = intervalosCombinados.size() - 1 - 0;
       chiTabla = chiTabla(gradosLibertad,0.05);
@@ -77,9 +57,9 @@ public class PruebaChiCuadrado {
   } else if (distribucion.equalsIgnoreCase("Exponencial")) {
       for (int i = 0; i < intervalos.size(); i++) {
         String[] partes = intervalos.get(i).split("-");
-        Double limInf = Double.parseDouble(partes[0]);
-        Double limSup = Double.parseDouble(partes[1]);
-        Double lambda = 1.0 / media;
+        double limInf = Double.parseDouble(partes[0]);
+        double limSup = Double.parseDouble(partes[1]);
+        double lambda = 1.0 / media;
 
         Double probabilidad = (1 - Math.exp(-lambda * limSup)) - (1 - Math.exp(-lambda * limInf));
 

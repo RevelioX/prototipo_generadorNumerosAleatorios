@@ -1,8 +1,5 @@
 package backend.org.intervalos;
 
-import backend.org.boundary.Histograma;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,45 +10,33 @@ public class Intervalos {
         for (int i = 0; i < n - 1; i++) {
             boolean swapped = false;
             for (int j = 0; j < n - i - 1; j++) {
-                String key = arr.get(j).getKey();
-                String[] parts = key.split("-");
-                if (parts.length != 1) {
-                    continue;
-                }
-                String secondPart = parts[1];
+                double firstLowerBound = parseFirstPart(arr.get(j).getKey());
+                double nextLowerBound = parseFirstPart(arr.get(j + 1).getKey());
 
-                if (secondPart.isEmpty()) {
-                    continue;
-                }
-
-                System.out.println("Sengunda parte" + secondPart);
-                double segundoElementoInt = Double.parseDouble(secondPart);
-
-                String key2 = arr.get(j + 1).getKey();
-                String[] parts2 = key2.split("-");
-                if (parts2.length != 1) {
-                    // La cadena no tiene el formato esperado, continuar con la siguiente iteración
-                    continue;
-                }
-                String secodPart2 = parts2[0];
-                // Verificar si la parte de la cadena no está vacía antes de convertirla a un número
-                if (secodPart2.isEmpty()) {
-                    // La parte de la cadena está vacía, continuar con la siguiente iteración
-                    continue;
-                }
-                double segundoElementoInt2 = Double.parseDouble(secodPart2);
-
-                if (segundoElementoInt > segundoElementoInt2) {
+                if (firstLowerBound > nextLowerBound) {
                     Map.Entry<String, Long> temp = arr.get(j);
                     arr.set(j, arr.get(j + 1));
                     arr.set(j + 1, temp);
                     swapped = true;
                 }
             }
-            if (!swapped)
-                break;
+            if (!swapped) break; // Salir del bucle si no hay cambios, lo que indica que la lista está ordenada.
         }
-        System.out.println(arr);
+        System.out.println(arr); // Imprimir la lista ordenada para verificar.
         return arr;
     }
+
+
+    private double parseFirstPart(String interval) {
+        String firstPart = interval.split(" - ")[0];
+        // Remover paréntesis si están presentes
+        firstPart = firstPart.replace("(", "").replace(")", "");
+        try {
+            return Double.parseDouble(firstPart);
+        } catch (NumberFormatException e) {
+            System.err.println("Error parsing number: " + firstPart);
+            return Double.MAX_VALUE; // Devuelve un valor alto para manejar errores de formato.
+        }
+    }
 }
+
