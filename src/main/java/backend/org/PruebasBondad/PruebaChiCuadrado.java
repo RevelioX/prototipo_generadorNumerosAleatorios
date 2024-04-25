@@ -24,6 +24,8 @@ public class PruebaChiCuadrado {
     List<Long> frecuenciasObservadasCombinadas = new ArrayList<>();
 
 
+
+
       if (distribucion.equals("Normal")) {
         for (int i = 0; i < intervalos.size(); i++) {
           String[] partes = intervalos.get(i).split(" - ");
@@ -111,6 +113,8 @@ public class PruebaChiCuadrado {
     } else{
       System.out.println("La hipotesis se rechaza ");
     }
+
+    PruebaKs pruebaks = new PruebaKs(frecuenciasEsperadasTemporales,frecuenciasObservadasCombinadas, n);
 
 
     return chiCalculado;
