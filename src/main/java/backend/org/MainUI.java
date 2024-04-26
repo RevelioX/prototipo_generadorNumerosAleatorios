@@ -132,6 +132,7 @@ public class MainUI extends JFrame {
             String selectedGenerator = (String) generatorSelector.getSelectedItem();
 
             List<Double> datos = simulateData(selectedGenerator, param1, param2);
+            System.out.println(datos);
             if (datos != null) {
                 Histograma histograma = new Histograma(datos, intervalos, param1, param2, selectedGenerator);
                 chart = histograma.buildChart();
