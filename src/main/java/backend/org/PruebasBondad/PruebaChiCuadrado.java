@@ -51,7 +51,6 @@ public class PruebaChiCuadrado {
 
   } else if (distribucion.equalsIgnoreCase("Exponencial")) {
         double lambda = media;
-        System.out.println("Lambda" + lambda);
         for (int i = 0; i < intervalos.size(); i++) {
           String[] partes = intervalos.get(i).split("-");
           double limInf = Double.parseDouble(partes[0]);
@@ -59,7 +58,6 @@ public class PruebaChiCuadrado {
 
 
           Double probabilidad = (1- Math.exp(-lambda * limSup)) - (1 - Math.exp(-lambda * limInf));
-          System.out.println(probabilidad);
           if (probabilidad <= 0) {
             continue;
           }
@@ -73,7 +71,6 @@ public class PruebaChiCuadrado {
         asegurarFrecuenciasMinimas(frecuenciasEsperadasTemporales, intervalosCombinados, frecuenciasObservadasCombinadas, 5);
 
         int gradosLibertad = intervalosCombinados.size() - 1 - 0;
-        System.out.println(gradosLibertad);
         chiTabla = chiTabla(gradosLibertad,0.05);
 
 
@@ -94,7 +91,7 @@ public class PruebaChiCuadrado {
     }
 
     Double chiCalculado = 0.0;
-    for (int i = 0; i < frecuenciasEsperadasTemporales.size(); i++) {  // Use the modified size after list manipulations
+    for (int i = 0; i < frecuenciasEsperadasTemporales.size(); i++) {
       chiCalculado += Math.pow(frecuenciasObservadasCombinadas.get(i) - frecuenciasEsperadasTemporales.get(i), 2) /
               frecuenciasEsperadasTemporales.get(i);
     }
@@ -157,7 +154,7 @@ public class PruebaChiCuadrado {
       return Double.parseDouble(limit);
     } catch (NumberFormatException e) {
       System.err.println("Error parsing number: " + limit);
-      return 0; // Considerar lanzar una excepción según el manejo de error deseado.
+      return 0;
     }
   }
 

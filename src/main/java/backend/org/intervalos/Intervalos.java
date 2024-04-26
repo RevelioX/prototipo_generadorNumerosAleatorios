@@ -22,7 +22,6 @@ public class Intervalos {
             }
             if (!swapped) break; // Salir del bucle si no hay cambios, lo que indica que la lista está ordenada.
         }
-        System.out.println(arr); // Imprimir la lista ordenada para verificar.
         return arr;
     }
 

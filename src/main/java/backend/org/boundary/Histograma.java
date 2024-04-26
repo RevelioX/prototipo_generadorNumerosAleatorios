@@ -26,11 +26,7 @@ public class Histograma {
 
     List<Map.Entry<String, Long>> arr = new ArrayList<>(distributionMap.entrySet());
     Intervalos intervalos = new Intervalos();
-//    System.out.println(arr);
     List<Map.Entry<String, Long>> intervalos1 = intervalos.calcularIntervalos(arr);
-//
-//    List<String> xData = new ArrayList<>();
-//    List<Long> yData = new ArrayList<>();
 
     for (Map.Entry<String, Long> entry : intervalos1) {
       String key = entry.getKey();

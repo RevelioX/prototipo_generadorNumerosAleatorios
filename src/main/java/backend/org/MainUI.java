@@ -24,7 +24,7 @@ public class MainUI extends JFrame {
     private JLabel param1Label;
     private JLabel param2Label;
     private CategoryChart chart;
-    private JTable table; // Agregado aquí
+    private JTable table;
 
     public MainUI() {
         super("Generador de Histograma");
@@ -103,7 +103,6 @@ public class MainUI extends JFrame {
             double param2;
             try {
                 intervalos = Integer.parseInt(intervaloText);
-                System.out.println("Intervalos: " + intervalos);
             } catch (NumberFormatException e) {
                 System.out.println("Error parsing intervaloText: " + e.getMessage());
                 e.printStackTrace();
@@ -112,18 +111,15 @@ public class MainUI extends JFrame {
 
             try {
                 param1 = Double.parseDouble(param1Text);
-                System.out.println("Param1: " + param1);
             } catch (NumberFormatException e) {
                 System.out.println("Error parsing param1Text: " + e.getMessage());
                 e.printStackTrace();
                 return;
             }
 
-            // Verificación para evitar NumberFormatException si param2Text está vacío
             if (!param2Text.isEmpty()) {
                 try {
                     param2 = Double.parseDouble(param2Text);
-                    System.out.println("Param2: " + param2);
                 } catch (NumberFormatException e) {
                     System.out.println("Error parsing param2Text: " + e.getMessage());
                     e.printStackTrace();
@@ -131,7 +127,6 @@ public class MainUI extends JFrame {
                 }
             } else {
                 param2 = 1.0; // Valor predeterminado si param2Text está vacío
-                System.out.println("Param2 (default): " + param2);
             }
 
             String selectedGenerator = (String) generatorSelector.getSelectedItem();
